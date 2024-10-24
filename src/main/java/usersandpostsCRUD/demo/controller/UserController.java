@@ -2,6 +2,8 @@ package usersandpostsCRUD.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import usersandpostsCRUD.demo.dto.UserDto;
+import usersandpostsCRUD.demo.dto.UserResponseBody;
 import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.service.UserService;
 
@@ -22,13 +24,13 @@ private UserService userService;
     return userService.getUserById(id);
 }
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public UserResponseBody createUser(@RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        return userService.updateUser(id, userDetails);
+    public UserResponseBody updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        return userService.updateUser(id, userDto);
     }
 
     @DeleteMapping("/{id}")

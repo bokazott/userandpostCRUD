@@ -2,7 +2,9 @@ package usersandpostsCRUD.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import usersandpostsCRUD.demo.dto.UserDto;
 import usersandpostsCRUD.demo.entity.Post;
+import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.PostNotFoundException;
 import usersandpostsCRUD.demo.repository.PostRepository;
 import usersandpostsCRUD.demo.repository.UserRepository;
@@ -25,7 +27,7 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Post createPost(Post post, Long userId) {
+    public Post createPost(Post post, long userId) {
         userRepository.findById(userId).ifPresent(post::setUser);
         return postRepository.save(post);
     }

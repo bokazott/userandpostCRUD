@@ -1,6 +1,8 @@
 package usersandpostsCRUD.demo.service;
 
 import org.springframework.stereotype.Service;
+import usersandpostsCRUD.demo.dto.UserDto;
+import usersandpostsCRUD.demo.dto.UserResponseBody;
 import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
 import usersandpostsCRUD.demo.repository.UserRepository;
@@ -25,35 +27,54 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
+    public UserResponseBody createUser(UserDto userDto) {
+        User user=new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setAge(userDto.getAge());
+        user.setHeight(userDto.getHeight());
+        user.setWeight(userDto.getWeight());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+        User userOdBaza = userRepository.save(user);
+
+        UserResponseBody userSoKeGovratamNazad = new UserResponseBody();
+        userSoKeGovratamNazad.setFistName(userOdBaza.getFirstName());
+        userSoKeGovratamNazad.setLast(userOdBaza.getLastName());
+        userSoKeGovratamNazad.setId(userOdBaza.getId());
+        return userSoKeGovratamNazad;
     }
 
-    public User updateUser(Long id, User userDetails) {
+    public UserResponseBody updateUser(Long id, UserDto userDto) {
         return userRepository.findById(id).map(user -> {
-            if (userDetails.getFirstName() != null) {
-                user.setFirstName(userDetails.getFirstName());
+            if (userDto.getFirstName() != null) {
+                user.setFirstName(userDto.getFirstName());
             }
-            if (userDetails.getLastName() != null) {
-                user.setLastName(userDetails.getLastName());
+            if (userDto.getLastName() != null) {
+                user.setLastName(userDto.getLastName());
             }
-            if (userDetails.getAge() != 0) {
-                user.setAge(userDetails.getAge());
+            if (userDto.getAge() != null) {
+                user.setAge(userDto.getAge());
             }
-            if (userDetails.getWeight() != 0) {
-                user.setWeight(userDetails.getWeight());
+            if (userDto.getWeight() != null) {
+                user.setWeight(userDto.getWeight());
             }
-            if (userDetails.getHeight() != 0) {
-                user.setHeight(userDetails.getHeight());
+            if (userDto.getHeight() != null) {
+                user.setHeight(userDto.getHeight());
             }
-            if (userDetails.getEmail() != null) {
-                user.setEmail(userDetails.getEmail());
+            if (userDto.getEmail() != null) {
+                user.setEmail(userDto.getEmail());
             }
-            if (userDetails.getPhoneNumber() != null) {
-                user.setPhoneNumber(userDetails.getPhoneNumber());
+            if (userDto.getPhoneNumber() != null) {
+                user.setPhoneNumber(userDto.getPhoneNumber());
             }
-            return userRepository.save(user);
+            User updatedUser = userRepository.save(user);
+            UserResponseBody response = new UserResponseBody();
+            response.setId(updatedUser.getId());
+            response.setFistName(updatedUser.getFirstName());
+            response.setLast(updatedUser.getLastName());
+            return response;
         }).orElseThrow(() -> new UserNotFoundException(id));
     }
 

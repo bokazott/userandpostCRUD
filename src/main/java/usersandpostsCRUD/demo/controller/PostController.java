@@ -2,6 +2,8 @@ package usersandpostsCRUD.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import usersandpostsCRUD.demo.dto.PostRequestDto;
+import usersandpostsCRUD.demo.dto.UserDto;
 import usersandpostsCRUD.demo.entity.Post;
 import usersandpostsCRUD.demo.service.PostService;
 
@@ -19,9 +21,13 @@ public class PostController {
         return postService.getAllPosts();
     }
 
-    @PostMapping("/{userId}")
-    public Post createPost(@PathVariable Long userId, @RequestBody Post post) {
-        return postService.createPost(post, userId);
+    @PostMapping
+    public Post createPost(@RequestBody PostRequestDto postRequest) {
+        // Create a new Post instance
+        Post post = new Post();
+        post.setTitle(postRequest.getTitle());
+        post.setDescription(postRequest.getDescription());
+        return postService.createPost(post, postRequest.getUserId());
     }
 
     @PutMapping("/{id}")

@@ -23,7 +23,6 @@ public class PostController {
 
     @PostMapping
     public Post createPost(@RequestBody PostRequestDto postRequest) {
-        // Create a new Post instance
         Post post = new Post();
         post.setTitle(postRequest.getTitle());
         post.setDescription(postRequest.getDescription());

@@ -2,8 +2,8 @@ package usersandpostsCRUD.demo.dto;
 
 public class UserResponseBody {
     private Long id;
-    private String fistName;
-    private String last;
+    private String firstName;
+    private String lastName;
 
     public Long getId() {
         return id;
@@ -13,19 +13,19 @@ public class UserResponseBody {
         this.id = id;
     }
 
-    public String getFistName() {
-        return fistName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFistName(String fistName) {
-        this.fistName = fistName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast() {
-        return last;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast(String last) {
-        this.last = last;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

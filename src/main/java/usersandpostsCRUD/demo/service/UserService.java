@@ -1,14 +1,13 @@
 package usersandpostsCRUD.demo.service;
 
 import org.springframework.stereotype.Service;
-import usersandpostsCRUD.demo.dto.UserDto;
+import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
 import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
 import usersandpostsCRUD.demo.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +29,8 @@ public class UserService {
     private UserResponseBody mapToResponseBody(User user){
         UserResponseBody responseBody=new UserResponseBody();
         responseBody.setId(user.getId());
-        responseBody.setFistName(user.getFirstName());
-        responseBody.setLast(user.getLastName());
+        responseBody.setFirstName(user.getFirstName());
+        responseBody.setLastName(user.getLastName());
         return responseBody;
     }
 
@@ -42,53 +41,53 @@ public class UserService {
         return mapToResponseBody(user);
     }
     //Create user with DTO
-    public UserResponseBody createUser(UserDto userDto) {
+    public UserResponseBody createUser(UserRequestBody userRequestBody) {
         User user=new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setAge(userDto.getAge());
-        user.setHeight(userDto.getHeight());
-        user.setWeight(userDto.getWeight());
-        user.setEmail(userDto.getEmail());
-        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setFirstName(userRequestBody.getFirstName());
+        user.setLastName(userRequestBody.getLastName());
+        user.setAge(userRequestBody.getAge());
+        user.setHeight(userRequestBody.getHeight());
+        user.setWeight(userRequestBody.getWeight());
+        user.setEmail(userRequestBody.getEmail());
+        user.setPhoneNumber(userRequestBody.getPhoneNumber());
 
         User userOdBaza = userRepository.save(user);
 
         UserResponseBody userSoKeGovratamNazad = new UserResponseBody();
-        userSoKeGovratamNazad.setFistName(userOdBaza.getFirstName());
-        userSoKeGovratamNazad.setLast(userOdBaza.getLastName());
+        userSoKeGovratamNazad.setFirstName(userOdBaza.getFirstName());
+        userSoKeGovratamNazad.setLastName(userOdBaza.getLastName());
         userSoKeGovratamNazad.setId(userOdBaza.getId());
         return userSoKeGovratamNazad;
     }
 //Update user with DTO
-    public UserResponseBody updateUser(Long id, UserDto userDto) {
+    public UserResponseBody updateUser(Long id, UserRequestBody userRequestBody) {
         return userRepository.findById(id).map(user -> {
-            if (userDto.getFirstName() != null) {
-                user.setFirstName(userDto.getFirstName());
+            if (userRequestBody.getFirstName() != null) {
+                user.setFirstName(userRequestBody.getFirstName());
             }
-            if (userDto.getLastName() != null) {
-                user.setLastName(userDto.getLastName());
+            if (userRequestBody.getLastName() != null) {
+                user.setLastName(userRequestBody.getLastName());
             }
-            if (userDto.getAge() != null) {
-                user.setAge(userDto.getAge());
+            if (userRequestBody.getAge() != null) {
+                user.setAge(userRequestBody.getAge());
             }
-            if (userDto.getWeight() != null) {
-                user.setWeight(userDto.getWeight());
+            if (userRequestBody.getWeight() != null) {
+                user.setWeight(userRequestBody.getWeight());
             }
-            if (userDto.getHeight() != null) {
-                user.setHeight(userDto.getHeight());
+            if (userRequestBody.getHeight() != null) {
+                user.setHeight(userRequestBody.getHeight());
             }
-            if (userDto.getEmail() != null) {
-                user.setEmail(userDto.getEmail());
+            if (userRequestBody.getEmail() != null) {
+                user.setEmail(userRequestBody.getEmail());
             }
-            if (userDto.getPhoneNumber() != null) {
-                user.setPhoneNumber(userDto.getPhoneNumber());
+            if (userRequestBody.getPhoneNumber() != null) {
+                user.setPhoneNumber(userRequestBody.getPhoneNumber());
             }
             User updatedUser = userRepository.save(user);
             UserResponseBody response = new UserResponseBody();
             response.setId(updatedUser.getId());
-            response.setFistName(updatedUser.getFirstName());
-            response.setLast(updatedUser.getLastName());
+            response.setFirstName(updatedUser.getFirstName());
+            response.setLastName(updatedUser.getLastName());
             return response;
         }).orElseThrow(() -> new UserNotFoundException(id));
     }

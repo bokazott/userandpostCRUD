@@ -77,10 +77,6 @@ public class Post {
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
-
-    public void update() {
-        this.updatedDate = LocalDateTime.now();
-    }
 }
 
 

@@ -2,9 +2,8 @@ package usersandpostsCRUD.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import usersandpostsCRUD.demo.dto.PostDto;
+import usersandpostsCRUD.demo.dto.PostRequestBody;
 import usersandpostsCRUD.demo.dto.PostResponseBody;
-import usersandpostsCRUD.demo.dto.UserDto;
 import usersandpostsCRUD.demo.entity.Post;
 import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.PostNotFoundException;
@@ -34,28 +33,20 @@ public class PostService {
         ;
     }
     private PostResponseBody mapPostToPostResponse(Post post){
-        UserDto userDto=new UserDto(post.getUser().getId(),
-                post.getUser().getFirstName(),
-                post.getUser().getLastName(),
-                post.getUser().getAge(),
-                post.getUser().getWeight(),
-                post.getUser().getHeight(),
-                post.getUser().getEmail(),
-                post.getUser().getPhoneNumber());
         return new PostResponseBody(
                 post.getTitle(),
                 post.getDescription(),
                 post.getCreatedDate(),
                 post.getUpdatedDate(),
-                userDto
+                post.getUser().getId()
         );
     }
 
     // Creating a post with userid
-    public PostResponseBody createPost(PostDto postDto) {
-        User user = userRepository.findById(postDto.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(postDto.getUserId()));
-        Post post = new Post(postDto.getTitle(), postDto.getDescription(), user);
+    public PostResponseBody createPost(PostRequestBody postRequestBody) {
+        User user = userRepository.findById(postRequestBody.getUserId())
+                .orElseThrow(() -> new UserNotFoundException(postRequestBody.getUserId()));
+        Post post = new Post(postRequestBody.getTitle(), postRequestBody.getDescription(), user);
         post.setCreatedDate(LocalDateTime.now());
         post.setUpdatedDate(LocalDateTime.now());
 
@@ -63,14 +54,16 @@ public class PostService {
         return mapPostToPostResponse(savedPost);
     }
     //Updating a post
-   public PostResponseBody updatePost(Long id,PostDto postDto){
+   public PostResponseBody updatePost(Long id, PostRequestBody postRequestBody){
         Post existingPost=postRepository.findById(id)
-                .orElseThrow(()-> new PostNotFoundException(postDto.getUserId()));
-        existingPost.setTitle(postDto.getTitle());
-        existingPost.setDescription(postDto.getDescription());
-        existingPost.setUser(userRepository.findById(postDto.getUserId()).orElseThrow(()-> new UserNotFoundException(postDto.getUserId())));
-
-        existingPost.update();
+                .orElseThrow(()-> new PostNotFoundException(postRequestBody.getUserId()));
+        if(!existingPost.getUser().getId().equals(postRequestBody.getUserId())){
+            throw new UserNotFoundException(postRequestBody.getUserId());
+        }
+        existingPost.setTitle(postRequestBody.getTitle());
+        existingPost.setDescription(postRequestBody.getDescription());
+        existingPost.setUser(userRepository.findById(postRequestBody.getUserId()).orElseThrow(()-> new UserNotFoundException(postRequestBody.getUserId())));
+        existingPost.setUpdatedDate(LocalDateTime.now());
         Post updatePost=postRepository.save(existingPost);
 
         return mapPostToPostResponse(updatePost);

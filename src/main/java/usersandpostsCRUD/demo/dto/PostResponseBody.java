@@ -7,17 +7,14 @@ public class PostResponseBody {
     private String description;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
-    private UserDto user;
+    private long userId;
 
-    public PostResponseBody() {
-    }
-
-    public PostResponseBody(String title, String description, LocalDateTime createdDate, LocalDateTime updatedDate, UserDto user) {
+    public PostResponseBody(String title, String description, LocalDateTime createdDate, LocalDateTime updatedDate, long userId) {
         this.title = title;
         this.description = description;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
-        this.user = user;
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -52,11 +49,11 @@ public class PostResponseBody {
         this.updatedDate = updatedDate;
     }
 
-    public UserDto getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser(UserDto user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

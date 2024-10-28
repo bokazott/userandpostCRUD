@@ -1,41 +1,33 @@
-package usersandpostsCRUD.demo.entity;
+package usersandpostsCRUD.demo.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-public class Post {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class PostDto {
+    private Long UserId;
     private String title;
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
+    private UserDto userDto;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
-    public Post() {}
+    public PostDto() {
+    }
 
-    public Post(String title, String description, User user) {
+    public PostDto(Long UserId, String title, String description, UserDto userDto, LocalDateTime createdDate, LocalDateTime updatedDate) {
+        this.UserId = UserId;
         this.title = title;
         this.description = description;
-        this.user = user;
-        this.createdDate = LocalDateTime.now();
-        this.updatedDate = LocalDateTime.now();
+        this.userDto = userDto;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return UserId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long UserId) {
+        this.UserId = UserId;
     }
 
     public String getTitle() {
@@ -54,12 +46,12 @@ public class Post {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
+    public UserDto getUserDto() {
+        return userDto;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -77,10 +69,4 @@ public class Post {
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
-
-    public void update() {
-        this.updatedDate = LocalDateTime.now();
-    }
 }
-
-

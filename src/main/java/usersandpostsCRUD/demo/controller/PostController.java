@@ -1,9 +1,10 @@
 package usersandpostsCRUD.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import usersandpostsCRUD.demo.dto.PostRequestDto;
-import usersandpostsCRUD.demo.dto.UserDto;
+import usersandpostsCRUD.demo.dto.PostDto;
+import usersandpostsCRUD.demo.dto.PostResponseBody;
 import usersandpostsCRUD.demo.entity.Post;
 import usersandpostsCRUD.demo.service.PostService;
 
@@ -17,23 +18,19 @@ public class PostController {
     private PostService postService;
 
     @GetMapping
-    public List<Post> getAllPosts() {
+    public List<PostResponseBody> getAllPosts() {
         return postService.getAllPosts();
     }
 
     @PostMapping
-    public Post createPost(@RequestBody PostRequestDto postRequest) {
-        Post post = new Post();
-        post.setTitle(postRequest.getTitle());
-        post.setDescription(postRequest.getDescription());
-        return postService.createPost(post, postRequest.getUserId());
+    public PostResponseBody createPost(@RequestBody PostDto postDto) {
+        return postService.createPost(postDto);
     }
 
     @PutMapping("/{id}")
-    public Post updatePost(@PathVariable Long id, @RequestBody Post postDetails) {
-        return postService.updatePost(id, postDetails);
+    public PostResponseBody updatePost(@PathVariable Long id, @RequestBody PostDto postDto) {
+        return postService.updatePost(id, postDto);
     }
-
     @DeleteMapping("/{id}")
     public void deletePost(@PathVariable Long id) {
         postService.deletePost(id);

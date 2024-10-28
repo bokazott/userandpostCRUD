@@ -1,41 +1,23 @@
-package usersandpostsCRUD.demo.entity;
+package usersandpostsCRUD.demo.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-public class Post {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class PostResponseBody {
     private String title;
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
+    private UserDto user;
 
-    public Post() {}
+    public PostResponseBody() {
+    }
 
-    public Post(String title, String description, User user) {
+    public PostResponseBody(String title, String description, LocalDateTime createdDate, LocalDateTime updatedDate, UserDto user) {
         this.title = title;
         this.description = description;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
         this.user = user;
-        this.createdDate = LocalDateTime.now();
-        this.updatedDate = LocalDateTime.now();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -54,14 +36,6 @@ public class Post {
         this.description = description;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -78,9 +52,11 @@ public class Post {
         this.updatedDate = updatedDate;
     }
 
-    public void update() {
-        this.updatedDate = LocalDateTime.now();
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 }
-
-

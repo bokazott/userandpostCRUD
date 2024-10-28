@@ -10,7 +10,7 @@ public class UserDto {
     private String email;
     private String phoneNumber;
 
-    public UserDto() {}
+    public UserDto(Long id) {}
 
     public UserDto(Long id, String firstName, String lastName, Integer age, Integer weight, Integer height, String email, String phoneNumber) {
         this.id = id;

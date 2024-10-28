@@ -9,6 +9,7 @@ import usersandpostsCRUD.demo.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -19,14 +20,28 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    // Get all users
+    public List<UserResponseBody> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::mapToResponseBody)
+                .collect(Collectors.toList());
+    }
+    // This is method to map User entity to UserResponseBody
+    private UserResponseBody mapToResponseBody(User user){
+        UserResponseBody responseBody=new UserResponseBody();
+        responseBody.setId(user.getId());
+        responseBody.setFistName(user.getFirstName());
+        responseBody.setLast(user.getLastName());
+        return responseBody;
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
+    //Get user by id
+    public UserResponseBody getUserById(Long id) {
+        User user= userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+        return mapToResponseBody(user);
     }
+    //Create user with DTO
     public UserResponseBody createUser(UserDto userDto) {
         User user=new User();
         user.setFirstName(userDto.getFirstName());
@@ -45,7 +60,7 @@ public class UserService {
         userSoKeGovratamNazad.setId(userOdBaza.getId());
         return userSoKeGovratamNazad;
     }
-
+//Update user with DTO
     public UserResponseBody updateUser(Long id, UserDto userDto) {
         return userRepository.findById(id).map(user -> {
             if (userDto.getFirstName() != null) {
@@ -77,7 +92,7 @@ public class UserService {
             return response;
         }).orElseThrow(() -> new UserNotFoundException(id));
     }
-
+//Delete user
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException(id);

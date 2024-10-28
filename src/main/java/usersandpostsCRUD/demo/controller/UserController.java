@@ -16,11 +16,11 @@ public class UserController {
 private UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers(){
+    public List<UserResponseBody> getAllUsers(){
         return userService.getAllUsers();
 }
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id){
+    public UserResponseBody getUserById(@PathVariable Long id){
     return userService.getUserById(id);
 }
     @PostMapping

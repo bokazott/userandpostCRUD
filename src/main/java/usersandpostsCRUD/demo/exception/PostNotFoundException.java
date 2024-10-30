@@ -2,6 +2,6 @@ package usersandpostsCRUD.demo.exception;
 
 public class PostNotFoundException extends RuntimeException {
     public PostNotFoundException(Long id) {
-        super("Post with id " + id + " not found");
+        super(String.format("Post with id %s is not found",id));
     }
 }

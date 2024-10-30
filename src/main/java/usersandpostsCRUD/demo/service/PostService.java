@@ -9,7 +9,7 @@ import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.PostNotFoundException;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
 import usersandpostsCRUD.demo.repository.PostRepository;
-import usersandpostsCRUD.demo.repository.UserRepository;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,12 +19,13 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
+        this.userService=userService;
     }
 //Get all posts
     public List<PostResponseBody> getAllPosts() {
@@ -44,8 +45,7 @@ public class PostService {
 
     // Creating a post with userid
     public PostResponseBody createPost(PostRequestBody postRequestBody) {
-        User user = userRepository.findById(postRequestBody.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(postRequestBody.getUserId()));
+        User user = userService.findUserById(postRequestBody.getUserId());
         Post post = new Post(postRequestBody.getTitle(), postRequestBody.getDescription(), user);
         post.setCreatedDate(LocalDateTime.now());
         post.setUpdatedDate(LocalDateTime.now());
@@ -60,9 +60,10 @@ public class PostService {
         if(!existingPost.getUser().getId().equals(postRequestBody.getUserId())){
             throw new UserNotFoundException(postRequestBody.getUserId());
         }
+        User user=userService.findUserById(postRequestBody.getUserId());
         existingPost.setTitle(postRequestBody.getTitle());
         existingPost.setDescription(postRequestBody.getDescription());
-        existingPost.setUser(userRepository.findById(postRequestBody.getUserId()).orElseThrow(()-> new UserNotFoundException(postRequestBody.getUserId())));
+        existingPost.setUser(user);
         existingPost.setUpdatedDate(LocalDateTime.now());
         Post updatePost=postRepository.save(existingPost);
 

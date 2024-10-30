@@ -1,5 +1,6 @@
 package usersandpostsCRUD.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
@@ -14,9 +15,13 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+    public User findUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException(userId));
     }
 
     // Get all users

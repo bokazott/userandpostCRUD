@@ -2,7 +2,7 @@ package usersandpostsCRUD.demo.exception;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(Long id) {
-        super("User with id " + id + " not found");
+        super(String.format("User with id %s does not exist",id));
     }
 }
 

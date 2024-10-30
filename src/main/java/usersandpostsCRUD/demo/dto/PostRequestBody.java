@@ -3,31 +3,29 @@ package usersandpostsCRUD.demo.dto;
 import java.time.LocalDateTime;
 
 public class PostRequestBody {
-    private Long UserId;
+    private Long userId;
     private String title;
     private String description;
-    private UserRequestBody userRequestBody;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
     public PostRequestBody() {
     }
 
-    public PostRequestBody(Long UserId, String title, String description, UserRequestBody userRequestBody, LocalDateTime createdDate, LocalDateTime updatedDate) {
-        this.UserId = UserId;
+    public PostRequestBody(Long userId, String title, String description, LocalDateTime createdDate, LocalDateTime updatedDate) {
+        this.userId = userId;
         this.title = title;
         this.description = description;
-        this.userRequestBody = userRequestBody;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
 
     public Long getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(Long UserId) {
-        this.UserId = UserId;
+        this.userId = UserId;
     }
 
     public String getTitle() {
@@ -44,14 +42,6 @@ public class PostRequestBody {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public UserRequestBody getUserDto() {
-        return userRequestBody;
-    }
-
-    public void setUserDto(UserRequestBody userRequestBody) {
-        this.userRequestBody = userRequestBody;
     }
 
     public LocalDateTime getCreatedDate() {

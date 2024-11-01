@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import usersandpostsCRUD.demo.exception.CityNotFoundException;
+import usersandpostsCRUD.demo.exception.CountryNotFoundException;
 import usersandpostsCRUD.demo.exception.PostNotFoundException;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
 
@@ -20,6 +22,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseError> handlePostNotFoundException(PostNotFoundException ex) {
         ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(CountryNotFoundException.class)
+    public ResponseEntity<ResponseError> handleCountryNotFoundException(CountryNotFoundException ex){
+        ResponseError responseError=new ResponseError(ex.getMessage(),HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(responseError,HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(CityNotFoundException.class)
+    public ResponseEntity<ResponseError> handleCityNotFoundException(CityNotFoundException ex){
+        ResponseError responseError=new ResponseError(ex.getMessage(),HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(responseError,HttpStatus.BAD_REQUEST);
     }
 
 

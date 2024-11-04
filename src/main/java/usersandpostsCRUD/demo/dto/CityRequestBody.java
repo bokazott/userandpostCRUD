@@ -8,7 +8,6 @@ public class CityRequestBody {
     // Constructors
     public CityRequestBody() {}
 
-
     public CityRequestBody(String name, String postCode, Long countryId) {
         this.name = name;
         this.postCode = postCode;

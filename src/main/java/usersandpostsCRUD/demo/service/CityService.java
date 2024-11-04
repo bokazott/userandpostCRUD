@@ -7,6 +7,7 @@ import usersandpostsCRUD.demo.dto.CityResponseBody;
 import usersandpostsCRUD.demo.entity.City;
 import usersandpostsCRUD.demo.entity.Country;
 import usersandpostsCRUD.demo.exception.CityNotFoundException;
+import usersandpostsCRUD.demo.exception.DuplicateCityException;
 import usersandpostsCRUD.demo.repository.CityRepository;
 
 import java.util.List;
@@ -42,6 +43,10 @@ public class CityService {
 
     public CityResponseBody createCity(CityRequestBody cityRequestBody) {
         Country country = countryService.findCountryById(cityRequestBody.getCountryId());
+        if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(), country)) {
+            throw new DuplicateCityException("City with name " + cityRequestBody.getName()
+                    + " already exists in country " + country.getName());
+        }
         City city = new City();
         city.setName(cityRequestBody.getName());
         city.setPostCode(cityRequestBody.getPostCode());
@@ -54,6 +59,12 @@ public class CityService {
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new CityNotFoundException(id));
         Country country = countryService.findCountryById(cityRequestBody.getCountryId());
+
+        if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(),country)
+        && !city.getId().equals(id)){
+            throw new DuplicateCityException("City with name"+ cityRequestBody.getName()
+                    +"already exist in country"+ country.getName());
+        }
 
         city.setName(cityRequestBody.getName());
         city.setPostCode(cityRequestBody.getPostCode());

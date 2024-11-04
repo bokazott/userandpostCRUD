@@ -33,6 +33,16 @@ public class GlobalExceptionHandler {
         ResponseError responseError=new ResponseError(ex.getMessage(),HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(responseError,HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(DuplicateCityException.class)
+    public ResponseEntity<ResponseError> handleDuplicateCityException(DuplicateCityException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(DuplicateCountryException.class)
+    public ResponseEntity<ResponseError> handleDuplicateCountryException(DuplicateCountryException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
 
 
     static class ResponseError {

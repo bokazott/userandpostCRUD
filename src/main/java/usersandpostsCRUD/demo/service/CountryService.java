@@ -6,12 +6,12 @@ import usersandpostsCRUD.demo.dto.CountryRequestBody;
 import usersandpostsCRUD.demo.dto.CountryResponseBody;
 import usersandpostsCRUD.demo.entity.Country;
 import usersandpostsCRUD.demo.exception.CountryNotFoundException;
+import usersandpostsCRUD.demo.exception.DuplicateCountryException;
 import usersandpostsCRUD.demo.repository.CountryRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class CountryService {
@@ -34,6 +34,9 @@ public class CountryService {
                 .orElseThrow(()-> new CountryNotFoundException(id));
    }
     public CountryResponseBody createCountry(CountryRequestBody countryRequestBody) {
+        if (countryRepository.existsByName(countryRequestBody.getName())) {
+            throw new DuplicateCountryException("Country with name " + countryRequestBody.getName() + " already exists.");
+        }
         Country country = new Country();
         country.setName(countryRequestBody.getName());
         return convertToResponseBody(countryRepository.save(country));
@@ -41,6 +44,9 @@ public class CountryService {
     public CountryResponseBody updateCountry(Long id, CountryRequestBody countryRequestBody) {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException(id));
+        if (countryRepository.existsByName(countryRequestBody.getName()) && !country.getName().equals(countryRequestBody.getName())) {
+            throw new DuplicateCountryException("Country with name " + countryRequestBody.getName() + " already exists.");
+        }
         country.setName(countryRequestBody.getName());
         return convertToResponseBody(countryRepository.save(country));
     }

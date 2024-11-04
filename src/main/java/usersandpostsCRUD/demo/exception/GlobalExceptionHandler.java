@@ -1,4 +1,4 @@
-package usersandpostsCRUD.demo;
+package usersandpostsCRUD.demo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

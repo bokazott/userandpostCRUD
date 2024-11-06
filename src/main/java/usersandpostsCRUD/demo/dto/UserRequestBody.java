@@ -8,8 +8,10 @@ public class UserRequestBody {
     private Integer height;
     private String email;
     private String phoneNumber;
+    private Long cityId;
 
-    public UserRequestBody(String firstName, String lastName, Integer age, Integer weight, Integer height, String email, String phoneNumber) {
+
+    public UserRequestBody(String firstName, String lastName, Integer age, Integer weight, Integer height, String email, String phoneNumber, Long cityId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -17,6 +19,7 @@ public class UserRequestBody {
         this.height = height;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.cityId=cityId;
     }
 
     public String getFirstName() {
@@ -73,5 +76,12 @@ public class UserRequestBody {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+    public Long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
     }
 }

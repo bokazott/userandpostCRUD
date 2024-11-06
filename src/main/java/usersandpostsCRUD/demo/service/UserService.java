@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
+import usersandpostsCRUD.demo.entity.City;
 import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
 import usersandpostsCRUD.demo.repository.UserRepository;
@@ -15,9 +16,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CityService cityService;
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,CityService cityService)
+    {
         this.userRepository = userRepository;
+        this.cityService=cityService;
     }
     public User findUserById(Long userId){
         return userRepository.findById(userId)
@@ -55,6 +59,10 @@ public class UserService {
         user.setWeight(userRequestBody.getWeight());
         user.setEmail(userRequestBody.getEmail());
         user.setPhoneNumber(userRequestBody.getPhoneNumber());
+        if(userRequestBody.getCityId()!=null){
+            City city=cityService.findCityById(userRequestBody.getCityId());
+            user.setCity(city);
+        }
 
         User userOdBaza = userRepository.save(user);
 

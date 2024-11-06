@@ -2,6 +2,8 @@ package usersandpostsCRUD.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class City {
     @Id
@@ -12,8 +14,11 @@ public class City {
     private String postCode;
 
     @ManyToOne
-    @JoinColumn(name = "country_id")
+    @JoinColumn(name = "country_id",nullable = false)
     private Country country;
+
+    @OneToMany(mappedBy = "city")
+    private List<User> users;
 
     public Long getId() {
         return id;

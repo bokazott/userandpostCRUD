@@ -35,12 +35,9 @@ public class CountryService {
                 .orElseThrow(()-> new CountryNotFoundException(id));
    }
     public CountryResponseBody createCountry(CountryRequestBody countryRequestBody) {
-        if(countryRequestBody==null){
+        if(countryRequestBody==null || countryRequestBody.getName() == null || countryRequestBody.getName().trim().isEmpty()){
             throw new InvalidCountryDataException("Country data");
         }
-            if (countryRequestBody.getName() == null || countryRequestBody.getName().isEmpty()) {
-                throw new InvalidCountryDataException("Country name");
-            }
         if (countryRepository.existsByName(countryRequestBody.getName())) {
             throw new DuplicateCountryException(countryRequestBody.getName());
         }
@@ -49,14 +46,15 @@ public class CountryService {
         return convertToResponseBody(countryRepository.save(country));
     }
     public CountryResponseBody updateCountry(Long id, CountryRequestBody countryRequestBody) {
+        if (countryRequestBody == null || countryRequestBody.getName() == null || countryRequestBody.getName().trim().isEmpty()) {
+            throw new InvalidCountryDataException("Country data");
+        }
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException(id));
-        if (countryRequestBody == null || countryRequestBody.getName() == null || countryRequestBody.getName().trim().isEmpty()) {
-            throw new InvalidCountryDataException("Country name");
-        }
-        if (countryRepository.existsByName(countryRequestBody.getName()) && !country.getName().equals(countryRequestBody.getName())) {
+        if (countryRepository.existsByName(countryRequestBody.getName())) {
             throw new DuplicateCountryException(countryRequestBody.getName());
         }
+
         country.setName(countryRequestBody.getName());
         return convertToResponseBody(countryRepository.save(country));
     }

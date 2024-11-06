@@ -41,6 +41,10 @@ public class CityService {
                 .orElseThrow(() -> new CityNotFoundException(id));
         return convertToResponseBody(city);
     }
+    public City findCityById(Long id) {
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new CityNotFoundException(id));
+    }
 
     public CityResponseBody createCity(CityRequestBody cityRequestBody) {
         if(cityRequestBody.getCountryId()==null){
@@ -67,28 +71,28 @@ public class CityService {
     public CityResponseBody updateCity(Long id, CityRequestBody cityRequestBody) {
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new CityNotFoundException(id));
-        if (cityRequestBody.getName() == null || cityRequestBody.getName().isEmpty()) {
-            throw new InvalidCityDataException("City name");
-        }
-        if (cityRequestBody.getPostCode() == null || cityRequestBody.getPostCode().isEmpty()) {
-            throw new InvalidCityDataException("Postal code");
-        }
-        if (cityRequestBody.getCountryId() == null) {
-            throw new InvalidCityDataException("Country ID");
-        }
-        Country country = countryService.findCountryById(cityRequestBody.getCountryId());
 
-        if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(),country)
-        && !city.getId().equals(id)){
-            throw new DuplicateCityException(cityRequestBody.getName(),country.getName());
+        if (cityRequestBody.getName() != null && !cityRequestBody.getName().equals(city.getName())) {
+            Country country = countryService.findCountryById(cityRequestBody.getCountryId());
+            if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(), country)) {
+                throw new DuplicateCityException(cityRequestBody.getName(), country.getName());
+            }
+            city.setName(cityRequestBody.getName());
         }
 
-        city.setName(cityRequestBody.getName());
-        city.setPostCode(cityRequestBody.getPostCode());
-        city.setCountry(country);
+        if (cityRequestBody.getPostCode() != null && !cityRequestBody.getPostCode().equals(city.getPostCode())) {
+            city.setPostCode(cityRequestBody.getPostCode());
+        }
+
+        if (cityRequestBody.getCountryId() != null) {
+            Country country = countryService.findCountryById(cityRequestBody.getCountryId());
+            city.setCountry(country);
+        }
 
         return convertToResponseBody(cityRepository.save(city));
     }
+
+
 
     public void deleteCity(Long id) {
         if (!cityRepository.existsById(id)) {

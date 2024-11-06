@@ -9,7 +9,7 @@ import java.util.List;
 public class User {
 
     @ManyToOne
-    @JoinColumn(name = "city_id")
+    @JoinColumn(name = "city_id",nullable = false)
     private City city;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
@@ -24,6 +24,7 @@ public class User {
     private int height;
     private String email;
     private String phoneNumber;
+    private Long cityId;
 
 
     public List<Post> getPosts() {
@@ -37,7 +38,7 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(String firstName, String lastName, int age, int weight, int height, String email, String phoneNumber) {
+    public User(String firstName, String lastName, int age, int weight, int height, String email, String phoneNumber,Long cityId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -45,6 +46,7 @@ public class User {
         this.height = height;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.cityId=cityId;
     }
 
     public Long getId() {
@@ -109,6 +111,22 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public Long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Long cityId) {
+        this.cityId = cityId;
     }
 }
 

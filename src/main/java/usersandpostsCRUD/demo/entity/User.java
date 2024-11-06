@@ -11,10 +11,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 

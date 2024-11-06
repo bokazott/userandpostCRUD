@@ -7,6 +7,7 @@ import usersandpostsCRUD.demo.dto.CountryResponseBody;
 import usersandpostsCRUD.demo.entity.Country;
 import usersandpostsCRUD.demo.exception.CountryNotFoundException;
 import usersandpostsCRUD.demo.exception.DuplicateCountryException;
+import usersandpostsCRUD.demo.exception.InvalidCountryDataException;
 import usersandpostsCRUD.demo.repository.CountryRepository;
 
 import java.util.List;
@@ -34,8 +35,14 @@ public class CountryService {
                 .orElseThrow(()-> new CountryNotFoundException(id));
    }
     public CountryResponseBody createCountry(CountryRequestBody countryRequestBody) {
+        if(countryRequestBody==null){
+            throw new InvalidCountryDataException("Country data");
+        }
+            if (countryRequestBody.getName() == null || countryRequestBody.getName().isEmpty()) {
+                throw new InvalidCountryDataException("Country name");
+            }
         if (countryRepository.existsByName(countryRequestBody.getName())) {
-            throw new DuplicateCountryException("Country with name " + countryRequestBody.getName() + " already exists.");
+            throw new DuplicateCountryException(countryRequestBody.getName());
         }
         Country country = new Country();
         country.setName(countryRequestBody.getName());
@@ -44,8 +51,11 @@ public class CountryService {
     public CountryResponseBody updateCountry(Long id, CountryRequestBody countryRequestBody) {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException(id));
+        if (countryRequestBody == null || countryRequestBody.getName() == null || countryRequestBody.getName().trim().isEmpty()) {
+            throw new InvalidCountryDataException("Country name");
+        }
         if (countryRepository.existsByName(countryRequestBody.getName()) && !country.getName().equals(countryRequestBody.getName())) {
-            throw new DuplicateCountryException("Country with name " + countryRequestBody.getName() + " already exists.");
+            throw new DuplicateCountryException(countryRequestBody.getName());
         }
         country.setName(countryRequestBody.getName());
         return convertToResponseBody(countryRepository.save(country));

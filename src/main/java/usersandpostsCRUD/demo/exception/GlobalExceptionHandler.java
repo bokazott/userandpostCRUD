@@ -43,6 +43,16 @@ public class GlobalExceptionHandler {
         ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(InvalidCityDataException.class)
+    public ResponseEntity<ResponseError> handleInvalidCityDataException(InvalidCityDataException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(InvalidCountryDataException.class)
+    public ResponseEntity<ResponseError> handleInvalidCountryDataException(InvalidCountryDataException ex) {
+        ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
 
 
     static class ResponseError {

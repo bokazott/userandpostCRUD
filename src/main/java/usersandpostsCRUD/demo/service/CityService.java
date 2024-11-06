@@ -8,10 +8,11 @@ import usersandpostsCRUD.demo.entity.City;
 import usersandpostsCRUD.demo.entity.Country;
 import usersandpostsCRUD.demo.exception.CityNotFoundException;
 import usersandpostsCRUD.demo.exception.DuplicateCityException;
+import usersandpostsCRUD.demo.exception.InvalidCityDataException;
 import usersandpostsCRUD.demo.repository.CityRepository;
 
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -42,10 +43,18 @@ public class CityService {
     }
 
     public CityResponseBody createCity(CityRequestBody cityRequestBody) {
+        if(cityRequestBody.getCountryId()==null){
+            throw new InvalidCityDataException("Country Id");
+        }
+        if (cityRequestBody.getName() == null || cityRequestBody.getName().isEmpty()) {
+            throw new InvalidCityDataException("City name");
+        }
+        if (cityRequestBody.getPostCode() == null || cityRequestBody.getPostCode().isEmpty()) {
+            throw new InvalidCityDataException("Postal code");
+        }
         Country country = countryService.findCountryById(cityRequestBody.getCountryId());
         if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(), country)) {
-            throw new DuplicateCityException("City with name " + cityRequestBody.getName()
-                    + " already exists in country " + country.getName());
+            throw new DuplicateCityException(cityRequestBody.getName(),country.getName());
         }
         City city = new City();
         city.setName(cityRequestBody.getName());
@@ -58,12 +67,20 @@ public class CityService {
     public CityResponseBody updateCity(Long id, CityRequestBody cityRequestBody) {
         City city = cityRepository.findById(id)
                 .orElseThrow(() -> new CityNotFoundException(id));
+        if (cityRequestBody.getName() == null || cityRequestBody.getName().isEmpty()) {
+            throw new InvalidCityDataException("City name");
+        }
+        if (cityRequestBody.getPostCode() == null || cityRequestBody.getPostCode().isEmpty()) {
+            throw new InvalidCityDataException("Postal code");
+        }
+        if (cityRequestBody.getCountryId() == null) {
+            throw new InvalidCityDataException("Country ID");
+        }
         Country country = countryService.findCountryById(cityRequestBody.getCountryId());
 
         if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(),country)
         && !city.getId().equals(id)){
-            throw new DuplicateCityException("City with name"+ cityRequestBody.getName()
-                    +"already exist in country"+ country.getName());
+            throw new DuplicateCityException(cityRequestBody.getName(),country.getName());
         }
 
         city.setName(cityRequestBody.getName());

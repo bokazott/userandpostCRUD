@@ -59,10 +59,10 @@ public class UserService {
         user.setWeight(userRequestBody.getWeight());
         user.setEmail(userRequestBody.getEmail());
         user.setPhoneNumber(userRequestBody.getPhoneNumber());
-        if(userRequestBody.getCityId()!=null){
-            City city=cityService.findCityById(userRequestBody.getCityId());
-            user.setCity(city);
-        }
+
+        City city=cityService.findCityById(userRequestBody.getCityId());
+        user.setCity(city);
+
 
         User userOdBaza = userRepository.save(user);
 

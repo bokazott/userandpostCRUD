@@ -34,6 +34,10 @@ public class CountryService {
                 .map(this::convertToResponseBody)
                 .orElseThrow(()-> new CountryNotFoundException(id));
    }
+    public Country getCountryByIdInner(Long countryId) {
+        return countryRepository.findById(countryId)
+                .orElseThrow(() -> new CountryNotFoundException(countryId));
+    }
     public CountryResponseBody createCountry(CountryRequestBody countryRequestBody) {
         if(countryRequestBody==null || countryRequestBody.getName() == null || countryRequestBody.getName().trim().isEmpty()){
             throw new InvalidCountryDataException("Country data");

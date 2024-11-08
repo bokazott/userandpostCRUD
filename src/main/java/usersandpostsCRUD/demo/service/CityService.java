@@ -69,24 +69,20 @@ public class CityService {
     }
 
     public CityResponseBody updateCity(Long id, CityRequestBody cityRequestBody) {
-        City city = cityRepository.findById(id)
-                .orElseThrow(() -> new CityNotFoundException(id));
-        if (cityRequestBody.getName() != null && !cityRequestBody.getName().equals(city.getName())) {
-            Country country = countryService.findCountryById(cityRequestBody.getCountryId());
-            if (cityRepository.existsByNameAndCountry(cityRequestBody.getName(), country)) {
-                throw new DuplicateCityException(cityRequestBody.getName(), country.getName());
-            }
+        City city = cityRepository.findById(id).orElseThrow(() -> new CityNotFoundException(id));
+
+        if (cityRequestBody.getName() != null && !cityRequestBody.getName().isEmpty() && !city.getName().equals(cityRequestBody.getName())) {
+            Country country = countryService.getCountryByIdInner(city.getCountry().getId());
+            cityRepository.existsByNameAndCountry(cityRequestBody.getName(), country);
             city.setName(cityRequestBody.getName());
-        } else if (cityRequestBody.getName() == null) {
-            city.setName(null);
         }
-        if (cityRequestBody.getPostCode() != null) {
+
+        if (cityRequestBody.getPostCode() != null && !cityRequestBody.getPostCode().isEmpty()) {
             city.setPostCode(cityRequestBody.getPostCode());
-        } else {
-            city.setPostCode(null);
         }
+
         if (cityRequestBody.getCountryId() != null) {
-            Country country = countryService.findCountryById(cityRequestBody.getCountryId());
+            Country country = countryService.getCountryByIdInner(cityRequestBody.getCountryId());
             city.setCountry(country);
         }
         return convertToResponseBody(cityRepository.save(city));

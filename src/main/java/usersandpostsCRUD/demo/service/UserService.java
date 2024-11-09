@@ -17,11 +17,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CityService cityService;
+    private final CountryService countryService;
     @Autowired
-    public UserService(UserRepository userRepository,CityService cityService)
+    public UserService(UserRepository userRepository,CityService cityService,CountryService countryService)
     {
         this.userRepository = userRepository;
         this.cityService=cityService;
+        this.countryService=countryService;
     }
     public User findUserById(Long userId){
         return userRepository.findById(userId)
@@ -41,6 +43,18 @@ public class UserService {
         responseBody.setFirstName(user.getFirstName());
         responseBody.setLastName(user.getLastName());
         return responseBody;
+    }
+    public List<UserResponseBody> getUserByCityId(Long cityId){
+        List<User> users = userRepository.findByCityId(cityId);
+        return users.stream()
+                .map(this::mapToResponseBody)
+                .collect(Collectors.toList());
+    }
+    public List<UserResponseBody> getUsersByCountryId(Long countryId) {
+        List<User> users = userRepository.findByCityCountryId(countryId);
+       return users.stream()
+               .map(this::mapToResponseBody)
+               .collect(Collectors.toList());
     }
 
     //Get user by id

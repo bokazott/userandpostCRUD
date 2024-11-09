@@ -3,9 +3,11 @@ package usersandpostsCRUD.demo.controller;
 import org.springframework.web.bind.annotation.*;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
+import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.service.UserService;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,6 +26,15 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponseBody getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/cities/{cityId}")
+    public List<UserResponseBody> getUserByCityId(@PathVariable Long cityId) {
+        return userService.getUserByCityId(cityId);
+    }
+    @GetMapping("/countries/{countryId}")
+    public List<UserResponseBody> getUsersByCountry(@PathVariable Long countryId) {
+        return userService.getUsersByCountryId(countryId);
     }
 
     @PostMapping

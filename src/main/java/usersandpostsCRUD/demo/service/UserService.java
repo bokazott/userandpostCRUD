@@ -17,13 +17,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CityService cityService;
-    private final CountryService countryService;
     @Autowired
-    public UserService(UserRepository userRepository,CityService cityService,CountryService countryService)
+    public UserService(UserRepository userRepository,CityService cityService)
     {
         this.userRepository = userRepository;
         this.cityService=cityService;
-        this.countryService=countryService;
     }
     public User findUserById(Long userId){
         return userRepository.findById(userId)
@@ -36,6 +34,19 @@ public class UserService {
                 .map(this::mapToResponseBody)
                 .collect(Collectors.toList());
     }
+
+    public List<UserResponseBody> getUsersByCityId(Long cityId) {
+        List<User> users = userRepository.findByCityId(cityId);
+        return users.stream()
+                .map(this::mapToResponseBody)
+                .collect(Collectors.toList());
+    }
+    public List<UserResponseBody> getUsersByCountryId(Long countryId) {
+        List<User> users = userRepository.findByCountryId(countryId);
+        return users.stream()
+                .map(this::mapToResponseBody)
+                .collect(Collectors.toList());
+    }
     // This is method to map User entity to UserResponseBody
     private UserResponseBody mapToResponseBody(User user){
         UserResponseBody responseBody=new UserResponseBody();
@@ -44,25 +55,14 @@ public class UserService {
         responseBody.setLastName(user.getLastName());
         return responseBody;
     }
-    public List<UserResponseBody> getUserByCityId(Long cityId){
-        List<User> users = userRepository.findByCityId(cityId);
-        return users.stream()
-                .map(this::mapToResponseBody)
-                .collect(Collectors.toList());
-    }
-    public List<UserResponseBody> getUsersByCountryId(Long countryId) {
-        List<User> users = userRepository.findByCityCountryId(countryId);
-       return users.stream()
-               .map(this::mapToResponseBody)
-               .collect(Collectors.toList());
-    }
-
     //Get user by id
     public UserResponseBody getUserById(Long id) {
         User user= userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
         return mapToResponseBody(user);
     }
+
+
     //Create user with DTO
     public UserResponseBody createUser(UserRequestBody userRequestBody) {
         User user=new User();

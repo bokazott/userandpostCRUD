@@ -12,8 +12,9 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u FROM User u WHERE u.city.id=:cityId")
+    @Query("SELECT u FROM User u JOIN u.city c WHERE c.id = :cityId")
     List<User> findByCityId(@Param("cityId") Long cityId);
-    @Query("SELECT u FROM User u WHERE u.city.country.id = :countryId")
+
+    @Query("SELECT u FROM User u JOIN u.city c JOIN c.country cn WHERE cn.id = :countryId")
     List<User> findByCountryId(@Param("countryId") Long countryId);
 }

@@ -7,6 +7,7 @@ import usersandpostsCRUD.demo.service.UserService;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -24,6 +25,16 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponseBody getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/cities/{cityId}")
+    public List<UserResponseBody> getUsersByCityId(@PathVariable Long cityId) {
+        return userService.getUsersByCityId(cityId);
+    }
+
+    @GetMapping("/countries/{countryId}")
+    public List<UserResponseBody> getUsersByCountryId(@PathVariable Long countryId) {
+        return userService.getUsersByCountryId(countryId);
     }
 
     @PostMapping

@@ -30,10 +30,9 @@ public class UserService {
     }
 
     // Get all users
-    public List<UserResponseBody> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(this::mapToResponseBody)
-                .collect(Collectors.toList());
+    public Page<UserResponseBody> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(this::mapToResponseBody);
     }
 
     public Page<UserResponseBody> getUsersByCityId(Long cityId, Pageable pageable) {

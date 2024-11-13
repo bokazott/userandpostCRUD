@@ -2,6 +2,7 @@ package usersandpostsCRUD.demo.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
@@ -17,10 +18,12 @@ public class UserController {
     public UserController(UserService userService){
         this.userService=userService;
     }
-
     @GetMapping
-    public List<UserResponseBody> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<UserResponseBody> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+        return userService.getAllUsers(pageable);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,8 @@
 package usersandpostsCRUD.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
@@ -30,9 +32,11 @@ public class UserService {
     }
 
     // Get all users
-    public Page<UserResponseBody> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable)
-                .map(this::mapToResponseBody);
+    public Page<UserResponseBody> getAllUsers(int page, int size, boolean ascending) {
+        Sort sort = ascending ? Sort.by("firstName").ascending() : Sort.by("firstName").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.map(this::mapToResponseBody);
     }
 
     public Page<UserResponseBody> getUsersByCityId(Long cityId, Pageable pageable) {

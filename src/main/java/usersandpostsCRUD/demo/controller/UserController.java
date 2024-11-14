@@ -20,10 +20,10 @@ public class UserController {
     }
     @GetMapping
     public Page<UserResponseBody> getAllUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
-        return userService.getAllUsers(pageable);
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+        return userService.getAllUsers(page, size, ascending);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,8 @@
 package usersandpostsCRUD.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import usersandpostsCRUD.demo.dto.PostRequestBody;
 import usersandpostsCRUD.demo.dto.PostResponseBody;
@@ -33,6 +35,16 @@ public class PostService {
         return posts.stream().map(this::mapPostToPostResponse).collect(Collectors.toList())
         ;
     }
+    public Page<PostResponseBody> getPostsByCityId(Long cityId, Pageable pageable) {
+        return postRepository.findAllByCityId(cityId, pageable)
+                .map(this::mapPostToPostResponse);
+    }
+
+    public Page<PostResponseBody> getPostsByCountryId(Long countryId, Pageable pageable) {
+        return postRepository.findAllByCountryId(countryId, pageable)
+                .map(this::mapPostToPostResponse);
+    }
+
     private PostResponseBody mapPostToPostResponse(Post post){
         return new PostResponseBody(
                 post.getTitle(),

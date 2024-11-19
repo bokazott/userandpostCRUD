@@ -1,5 +1,6 @@
 package usersandpostsCRUD.demo.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +45,7 @@ public class PostController {
     }
 
     @PostMapping
-    public PostResponseBody createPost(@RequestBody PostRequestBody postRequestBody) {
+    public PostResponseBody createPost(@Valid @RequestBody PostRequestBody postRequestBody) {
         return postService.createPost(postRequestBody);
     }
 

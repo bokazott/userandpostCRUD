@@ -2,12 +2,16 @@ package usersandpostsCRUD.demo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import usersandpostsCRUD.demo.exception.CityNotFoundException;
 import usersandpostsCRUD.demo.exception.CountryNotFoundException;
 import usersandpostsCRUD.demo.exception.PostNotFoundException;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -52,6 +56,76 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseError> handleInvalidCountryDataException(InvalidCountryDataException ex) {
         ResponseError responseError = new ResponseError(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        ValidationErrorResponse response = new ValidationErrorResponse();
+        response.setMessage("Validation failed");
+        response.setErrors(
+                ex.getBindingResult().getFieldErrors().stream()
+                        .map(error -> new ValidationError(
+                                error.getField(),
+                                error.getDefaultMessage(),
+                                error.getRejectedValue()
+                        ))
+                        .collect(Collectors.toList())
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    static class ValidationErrorResponse {
+        private String message;
+        private List<ValidationError> errors;
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public List<ValidationError> getErrors() {
+            return errors;
+        }
+
+        public void setErrors(List<ValidationError> errors) {
+            this.errors = errors;
+        }
+    }
+    static class ValidationError {
+        private String field;
+        private String message;
+        private Object rejectedValue;
+
+        public ValidationError(String field, String message, Object rejectedValue) {
+            this.field = field;
+            this.message = message;
+            this.rejectedValue = rejectedValue;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public Object getRejectedValue() {
+            return rejectedValue;
+        }
+
+        public void setRejectedValue(Object rejectedValue) {
+            this.rejectedValue = rejectedValue;
+        }
     }
 
 

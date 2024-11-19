@@ -1,11 +1,18 @@
 package usersandpostsCRUD.demo.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 public class PostRequestBody {
+    @NotNull(message = "User ID must not be null")
     private Long userId;
+    @NotBlank(message = "Title must not be blank")
     private String title;
+    @NotBlank(message = "Description must not be blank")
     private String description;
+    @NotNull(message = "Created Date must not be null")
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 

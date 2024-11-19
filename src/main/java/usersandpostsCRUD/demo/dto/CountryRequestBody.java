@@ -1,6 +1,9 @@
 package usersandpostsCRUD.demo.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CountryRequestBody {
+    @NotBlank(message = "Country name must not be blank")
     private String name;
 
     // Constructors

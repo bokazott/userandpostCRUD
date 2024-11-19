@@ -1,5 +1,6 @@
 package usersandpostsCRUD.demo.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import usersandpostsCRUD.demo.dto.CountryRequestBody;
 import usersandpostsCRUD.demo.dto.CountryResponseBody;
@@ -29,7 +30,7 @@ public class CountryController {
     }
 
     @PostMapping
-    public CountryResponseBody createCountry(@RequestBody CountryRequestBody countryRequestBody) {
+    public CountryResponseBody createCountry(@Valid @RequestBody CountryRequestBody countryRequestBody) {
         return countryService.createCountry(countryRequestBody);
     }
 

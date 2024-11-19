@@ -1,4 +1,5 @@
 package usersandpostsCRUD.demo.controller;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseBody createUser(@RequestBody UserRequestBody userRequestBody) {
+    public UserResponseBody createUser(@Valid @RequestBody UserRequestBody userRequestBody) {
         return userService.createUser(userRequestBody);
     }
 

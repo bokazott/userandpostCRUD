@@ -52,10 +52,13 @@ public class CountryService {
     public CountryResponseBody updateCountry(Long id, CountryRequestBody countryRequestBody) {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new CountryNotFoundException(id));
-        if (countryRepository.existsByName(countryRequestBody.getName())) {
-            throw new DuplicateCountryException(countryRequestBody.getName());
+        if (countryRequestBody.getName() != null && !countryRequestBody.getName().isEmpty()
+                && !country.getName().equals(countryRequestBody.getName())) {
+            if (countryRepository.existsByName(countryRequestBody.getName())) {
+                throw new DuplicateCountryException(countryRequestBody.getName());
+            }
+            country.setName(countryRequestBody.getName());
         }
-        country.setName(countryRequestBody.getName());
         return convertToResponseBody(countryRepository.save(country));
     }
     public void deleteCountry(Long id) {

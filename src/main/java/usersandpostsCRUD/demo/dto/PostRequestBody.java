@@ -1,5 +1,6 @@
 package usersandpostsCRUD.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,7 +14,9 @@ public class PostRequestBody {
     @NotBlank(message = "Description must not be blank")
     private String description;
     @NotNull(message = "Created Date must not be null")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedDate;
 
     public PostRequestBody() {

@@ -72,14 +72,20 @@ public class PostService {
         if(!existingPost.getUser().getId().equals(postRequestBody.getUserId())){
             throw new UserNotFoundException(postRequestBody.getUserId());
         }
-        User user=userService.findUserById(postRequestBody.getUserId());
-        existingPost.setTitle(postRequestBody.getTitle());
-        existingPost.setDescription(postRequestBody.getDescription());
-        existingPost.setUser(user);
+        if(postRequestBody.getTitle()!=null && !postRequestBody.getTitle().isEmpty()
+        && !existingPost.getTitle().equals(postRequestBody.getTitle())){
+            existingPost.setTitle(postRequestBody.getTitle());
+        }
+        if(postRequestBody.getDescription()!=null && !postRequestBody.getDescription().isEmpty()
+                && !existingPost.getDescription().equals(postRequestBody.getDescription())){
+            existingPost.setDescription(postRequestBody.getDescription());
+        }
+        if(postRequestBody.getUserId()!=null&& !existingPost.getUser().getId().equals(postRequestBody.getUserId())){
+            User user=userService.findUserById(postRequestBody.getUserId());
+            existingPost.setUser(user);
+        }
         existingPost.setUpdatedDate(LocalDateTime.now());
-        Post updatePost=postRepository.save(existingPost);
-
-        return mapPostToPostResponse(updatePost);
+        return mapPostToPostResponse(postRepository.save(existingPost));
    }
 
 //Deleting a post

@@ -1,6 +1,8 @@
 package usersandpostsCRUD.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import usersandpostsCRUD.demo.dto.PostRequestBody;
 import usersandpostsCRUD.demo.dto.PostResponseBody;
@@ -33,6 +35,16 @@ public class PostService {
         return posts.stream().map(this::mapPostToPostResponse).collect(Collectors.toList())
         ;
     }
+    public Page<PostResponseBody> getPostsByCityId(Long cityId, Pageable pageable) {
+        return postRepository.findAllByCityId(cityId, pageable)
+                .map(this::mapPostToPostResponse);
+    }
+
+    public Page<PostResponseBody> getPostsByCountryId(Long countryId, Pageable pageable) {
+        return postRepository.findAllByCountryId(countryId, pageable)
+                .map(this::mapPostToPostResponse);
+    }
+
     private PostResponseBody mapPostToPostResponse(Post post){
         return new PostResponseBody(
                 post.getTitle(),
@@ -60,14 +72,20 @@ public class PostService {
         if(!existingPost.getUser().getId().equals(postRequestBody.getUserId())){
             throw new UserNotFoundException(postRequestBody.getUserId());
         }
-        User user=userService.findUserById(postRequestBody.getUserId());
-        existingPost.setTitle(postRequestBody.getTitle());
-        existingPost.setDescription(postRequestBody.getDescription());
-        existingPost.setUser(user);
+        if(postRequestBody.getTitle()!=null && !postRequestBody.getTitle().isEmpty()
+        && !existingPost.getTitle().equals(postRequestBody.getTitle())){
+            existingPost.setTitle(postRequestBody.getTitle());
+        }
+        if(postRequestBody.getDescription()!=null && !postRequestBody.getDescription().isEmpty()
+                && !existingPost.getDescription().equals(postRequestBody.getDescription())){
+            existingPost.setDescription(postRequestBody.getDescription());
+        }
+        if(postRequestBody.getUserId()!=null&& !existingPost.getUser().getId().equals(postRequestBody.getUserId())){
+            User user=userService.findUserById(postRequestBody.getUserId());
+            existingPost.setUser(user);
+        }
         existingPost.setUpdatedDate(LocalDateTime.now());
-        Post updatePost=postRepository.save(existingPost);
-
-        return mapPostToPostResponse(updatePost);
+        return mapPostToPostResponse(postRepository.save(existingPost));
    }
 
 //Deleting a post

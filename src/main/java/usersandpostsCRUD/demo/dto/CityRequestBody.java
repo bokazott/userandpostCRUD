@@ -1,8 +1,14 @@
 package usersandpostsCRUD.demo.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class CityRequestBody {
+    @NotBlank(message = "City name must not be blank")
     private String name;
+    @NotBlank(message = "Post Code must not be blank")
     private String postCode;
+    @NotNull(message = "Country ID must not be null")
     private Long countryId;
 
     // Constructors

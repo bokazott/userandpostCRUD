@@ -1,6 +1,8 @@
 package usersandpostsCRUD.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
@@ -8,9 +10,10 @@ import usersandpostsCRUD.demo.entity.City;
 import usersandpostsCRUD.demo.entity.User;
 import usersandpostsCRUD.demo.exception.UserNotFoundException;
 import usersandpostsCRUD.demo.repository.UserRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UserService {
@@ -29,23 +32,20 @@ public class UserService {
     }
 
     // Get all users
-    public List<UserResponseBody> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(this::mapToResponseBody)
-                .collect(Collectors.toList());
+    public Page<UserResponseBody> getAllUsers(int page, int size, boolean ascending) {
+        Sort sort = ascending ? Sort.by("firstName").ascending() : Sort.by("firstName").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.map(this::mapToResponseBody);
     }
 
-    public List<UserResponseBody> getUsersByCityId(Long cityId) {
-        List<User> users = userRepository.findByCityId(cityId);
-        return users.stream()
-                .map(this::mapToResponseBody)
-                .collect(Collectors.toList());
+    public Page<UserResponseBody> getUsersByCityId(Long cityId, Pageable pageable) {
+        return userRepository.findByCityId(cityId, pageable)
+                .map(this::mapToResponseBody);
     }
-    public List<UserResponseBody> getUsersByCountryId(Long countryId) {
-        List<User> users = userRepository.findByCountryId(countryId);
-        return users.stream()
-                .map(this::mapToResponseBody)
-                .collect(Collectors.toList());
+    public Page<UserResponseBody> getUsersByCountryId(Long countryId, Pageable pageable) {
+        return userRepository.findByCountryId(countryId, pageable)
+                .map(this::mapToResponseBody);
     }
     // This is method to map User entity to UserResponseBody
     private UserResponseBody mapToResponseBody(User user){

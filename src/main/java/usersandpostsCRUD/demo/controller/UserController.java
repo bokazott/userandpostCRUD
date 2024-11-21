@@ -1,10 +1,13 @@
 package usersandpostsCRUD.demo.controller;
-
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import usersandpostsCRUD.demo.dto.UserRequestBody;
 import usersandpostsCRUD.demo.dto.UserResponseBody;
 import usersandpostsCRUD.demo.service.UserService;
-
 import java.util.List;
 
 
@@ -16,10 +19,12 @@ public class UserController {
     public UserController(UserService userService){
         this.userService=userService;
     }
-
     @GetMapping
-    public List<UserResponseBody> getAllUsers() {
-        return userService.getAllUsers();
+    public Page<UserResponseBody> getAllUsers(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+        return userService.getAllUsers(page, size, ascending);
     }
 
     @GetMapping("/{id}")
@@ -28,17 +33,26 @@ public class UserController {
     }
 
     @GetMapping("/cities/{cityId}")
-    public List<UserResponseBody> getUsersByCityId(@PathVariable Long cityId) {
-        return userService.getUsersByCityId(cityId);
+    public Page<UserResponseBody> getUsersByCityId(
+            @PathVariable Long cityId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userService.getUsersByCityId(cityId, pageable);
     }
 
     @GetMapping("/countries/{countryId}")
-    public List<UserResponseBody> getUsersByCountryId(@PathVariable Long countryId) {
-        return userService.getUsersByCountryId(countryId);
+    public Page<UserResponseBody> getUsersByCountryId(
+            @PathVariable Long countryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return userService.getUsersByCountryId(countryId, pageable);
     }
 
     @PostMapping
-    public UserResponseBody createUser(@RequestBody UserRequestBody userRequestBody) {
+    public UserResponseBody createUser(@Valid @RequestBody UserRequestBody userRequestBody) {
         return userService.createUser(userRequestBody);
     }
 

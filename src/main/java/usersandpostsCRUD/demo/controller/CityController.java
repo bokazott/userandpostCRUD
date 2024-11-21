@@ -1,5 +1,6 @@
 package usersandpostsCRUD.demo.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import usersandpostsCRUD.demo.dto.CityRequestBody;
 import usersandpostsCRUD.demo.dto.CityResponseBody;
@@ -29,7 +30,7 @@ public class CityController {
     }
 
     @PostMapping
-    public CityResponseBody createCity(@RequestBody CityRequestBody cityRequestBody) {
+    public CityResponseBody createCity(@Valid @RequestBody CityRequestBody cityRequestBody) {
         return cityService.createCity(cityRequestBody);
     }
 

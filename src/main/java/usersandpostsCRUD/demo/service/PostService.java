@@ -44,6 +44,10 @@ public class PostService {
         return postRepository.findAllByCountryId(countryId, pageable)
                 .map(this::mapPostToPostResponse);
     }
+    public Post findPostById(Long postId){
+        return postRepository.findById(postId)
+                .orElseThrow(()->new PostNotFoundException(postId));
+    }
 
     private PostResponseBody mapPostToPostResponse(Post post){
         return new PostResponseBody(
